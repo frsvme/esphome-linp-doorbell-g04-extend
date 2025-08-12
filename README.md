@@ -18,6 +18,23 @@
 
 P.S. The "Mute" switch is reset to Disabled by default.
 
+## Fast Configure
+- Create a new project in ESPHome (click "+ NEW DEVICE")
+- Put "doorbell-mi-extend" in name and click "NEXT"
+- Click "SKIP THIS STEP"
+- Choose "ESP32"
+- Save generated "Encryption Key" and click "SKIP"
+- Click "EDIT" on the new created project
+- Save generated value from "ota"->"password"
+- Copy the contents of the "doorbell.yaml" from this repository, replace the missing values with your own, which you saved in the previous steps
+- Make sure that you have setup "!secret" settings for wifi
+- Compile and install in any convenient way
+- After device boot up, click on the physical call button and save its "Button ID" from the logs
+- Comment or delete line #96 in ESPHome "project code":
+  >dump: linptech_g6l
+- Put your received "Button ID" in line #204 in ESPHome "project code":
+  >address: 0xABCDEF
+- Compile and install wirelessly
 
 ## Background
 The Linptech G6L-WIFI is a wifi doorbell with a self-powered button.  It's part of the Mijia (Xiaomi smart home) ecosystem, but it unfortunately doesn't seem to announce events (such as the button being pressed) on the local network.  As such, this project aims to provide replacement firmware to enable full local control via [ESPHome](https://esphome.io/) - which provides for simple integration with [Home Assistant](https://www.home-assistant.io/).
