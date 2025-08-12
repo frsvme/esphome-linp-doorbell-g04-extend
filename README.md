@@ -1,6 +1,8 @@
 # ESPHome custom component for Linptech G6L-WIFI (linp-doorbell-g04) Extended for Home Assistant
 
 ## Extended
+<img width="257" height="336" alt="image" src="https://github.com/user-attachments/assets/911492fe-5253-4416-9865-fa05a87d5b33" />
+
 ### Mute mode
 - The right button on the device switches the "Mute mode" by default
 - Added a "Mute mode" switch in the Home Assistant
