@@ -18,7 +18,7 @@
 
 >To save the current settings to flash as default, you need to click on the "Doorbell Restart" button in Home Assistant.
 
-P.S. The "Mute" switch is reset to Disabled by default.
+P.S. The "Mute" switch is reset to Disabled by default. For example, if the power is turned off and on or the device is rebooted.
 
 ## Fast Configure
 - Create a new project in ESPHome (click "+ NEW DEVICE")
