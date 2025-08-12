@@ -93,7 +93,7 @@ linptech_g6l:
 remote_receiver:
   pin: GPIO26
   # You can remove the dumper once you know the IDs, if desired.
-#  dump: linptech_g6l
+  dump: linptech_g6l
   filter: 20us
   idle: 900us
   tolerance: 33%
@@ -201,7 +201,7 @@ binary_sensor:
     name: Doorbell A
     linptech_g6l:
       # Put the ID found from the dumper here.
-      address: 0x860461
+      address: 0xABCDEF
     filters:
       # The buttons' transmission is repeated; 0.2s is long enough to debounce.
       # A longer delay can be used to filter out actual repeat presses.
