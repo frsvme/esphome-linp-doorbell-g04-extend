@@ -1,4 +1,23 @@
-# ESPHome custom component for Linptech G6L-WIFI (linp-doorbell-g04)
+# ESPHome custom component for Linptech G6L-WIFI (linp-doorbell-g04) Extended for Home Assistant
+
+## Extended
+### Mute mode
+- The right button on the device switches the "Mute mode" by default
+- Added a "Mute mode" switch in the Home Assistant
+
+>If you turn off "Mute mode" with the physical right button, the device will play the currently set sound, notifying that "Mute mode" has been disabled.
+
+>If you turn off the "Mute mode" from the Home Assistant, there will be no sound.  While the "Mute mode" is active, the orange backlight will be turned on.
+
+### Settings
+- Added "Volume value" slider in the Home Assistant
+- Added "Tune (Melody) value" slider in the Home Assistant
+- In Home Assistant added a button "Play Doorbell" that plays the sound as if you had pressed the call button
+
+>To save the current settings to flash as default, you need to click on the "Doorbell Restart" button in Home Assistant.
+
+P.S. The "Mute" switch is reset to Disabled by default.
+
 
 ## Background
 The Linptech G6L-WIFI is a wifi doorbell with a self-powered button.  It's part of the Mijia (Xiaomi smart home) ecosystem, but it unfortunately doesn't seem to announce events (such as the button being pressed) on the local network.  As such, this project aims to provide replacement firmware to enable full local control via [ESPHome](https://esphome.io/) - which provides for simple integration with [Home Assistant](https://www.home-assistant.io/).
