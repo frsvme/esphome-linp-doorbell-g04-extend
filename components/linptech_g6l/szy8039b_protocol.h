@@ -37,7 +37,9 @@ template<typename... Ts> class Szy8039bAction : public RemoteTransmitterActionBa
   TEMPLATABLE_VALUE(uint8_t, tune)
   TEMPLATABLE_VALUE(uint8_t, volume)
   TEMPLATABLE_VALUE(uint8_t, mode)
-  TEMPLATABLE_VALUE(Szy8039bCommand, command)
+  //TEMPLATABLE_VALUE(Szy8039bCommand, command)
+
+  void set_command(Szy8039bCommand cmd) { this->command_ = cmd; }
 
   void encode(RemoteTransmitData *dst, Ts... x) override {
     Szy8039bData data{};
@@ -47,6 +49,9 @@ template<typename... Ts> class Szy8039bAction : public RemoteTransmitterActionBa
     data.command = this->command_.value(x...);
     Szy8039bProtocol().encode(dst, data);
   }
+
+ protected:
+  Szy8039bCommand command_{SZY8039B_COMMAND_PLAY};
 };
 
 }  // namespace remote_base
