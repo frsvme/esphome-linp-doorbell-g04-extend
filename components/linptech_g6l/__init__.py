@@ -104,17 +104,28 @@ def szy8039b_dumper(var, config):
     pass
 
 
+#@register_action("szy8039b", Szy8039bAction, SZY8039B_SCHEMA)
+#async def szy8039b_action(var, config, args):
+#    template_ = await cg.templatable(config[CONF_TUNE], args, cg.uint8)
+#    cg.add(var.set_tune(template_))
+#    template_ = await cg.templatable(config[CONF_VOLUME], args, cg.uint8)
+#    cg.add(var.set_volume(template_))
+#    template_ = await cg.templatable(config[CONF_MODE], args, cg.uint8)
+#    cg.add(var.set_mode(template_))
+#    template_ = await cg.templatable(config[CONF_COMMAND], args, cg.uint8)
+#    cg.add(var.set_command(template_))
 @register_action("szy8039b", Szy8039bAction, SZY8039B_SCHEMA)
 async def szy8039b_action(var, config, args):
     template_ = await cg.templatable(config[CONF_TUNE], args, cg.uint8)
     cg.add(var.set_tune(template_))
+
     template_ = await cg.templatable(config[CONF_VOLUME], args, cg.uint8)
     cg.add(var.set_volume(template_))
+
     template_ = await cg.templatable(config[CONF_MODE], args, cg.uint8)
     cg.add(var.set_mode(template_))
-    template_ = await cg.templatable(config[CONF_COMMAND], args, cg.uint8)
-    cg.add(var.set_command(template_))
 
+    cg.add(var.set_command(config[CONF_COMMAND]))
 
 
 linptech_g6l_ns = cg.esphome_ns.namespace("linptech_g6l")
