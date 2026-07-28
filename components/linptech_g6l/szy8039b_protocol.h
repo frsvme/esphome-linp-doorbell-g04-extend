@@ -46,7 +46,7 @@ template<typename... Ts> class Szy8039bAction : public RemoteTransmitterActionBa
     data.tune = this->tune_.value(x...);
     data.volume = this->volume_.value(x...);
     data.mode = this->mode_.value(x...);
-    data.command = this->command_.value(x...);
+    data.command = this->command_;
     Szy8039bProtocol().encode(dst, data);
   }
 
