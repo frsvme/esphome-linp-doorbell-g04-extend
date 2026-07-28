@@ -83,7 +83,9 @@ captive_portal:
 
 # Import the external component.
 external_components:
-  - source: github://frsvme/esphome-linp-doorbell-g04-extend
+  - source:
+      type: git
+      url: https://github.com/frsvme/esphome-linp-doorbell-g04-extend
     components: [ linptech_g6l ]
     
 # Add remote protocols for buttons and chime chip.
@@ -104,6 +106,7 @@ remote_receiver:
 remote_transmitter:
   pin: GPIO15
   carrier_duty_percent: 100%
+  non_blocking: true
   
 # LED outputs.
 output:
