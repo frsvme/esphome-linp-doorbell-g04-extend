@@ -4,33 +4,33 @@
 <img width="257" height="336" alt="image" src="https://github.com/user-attachments/assets/911492fe-5253-4416-9865-fa05a87d5b33" />
 
 ### Mute mode
-- The right button on the device switches the "Mute mode" by default
-- Added a "Mute mode" switch in the Home Assistant
+- The right button on the device switches the `Mute mode` by default
+- Added a `Mute mode` switch in the Home Assistant
 
->If you turn off "Mute mode" with the physical right button, the device will play the currently set sound, notifying that "Mute mode" has been disabled.
+>If you turn off `Mute mode` with the physical right button, the device will play the currently set sound, notifying that `Mute mode` has been disabled.
 
->If you turn off the "Mute mode" from the Home Assistant, there will be no sound.  While the "Mute mode" is active, the orange backlight will be turned on.
+>If you turn off the `Mute mode` from the Home Assistant, there will be no sound.  While the `Mute mode` is active, the orange backlight will be turned on.
 
 ### Settings
-- Added "Volume value" slider in the Home Assistant
-- Added "Tune (Melody) value" slider in the Home Assistant
-- In Home Assistant added a button "Play Doorbell" that plays the sound as if you had pressed the call button
+- Added `Volume value` slider in the Home Assistant
+- Added `Tune (Melody) value` slider in the Home Assistant
+- In Home Assistant added a button `Play Doorbell` that plays the sound as if you had pressed the call button
 
->To save the current settings to flash as default, you need to click on the "Doorbell Restart" button in Home Assistant or web-panel.
+>To save the current settings to flash as default, you need to click on the `Doorbell Restart` button in Home Assistant or web-panel.
 
-P.S. The "Mute" switch is reset to Disabled by default. For example, if the power is turned off and on or the device is rebooted.
+P.S. The `Mute` switch is reset to Disabled by default. For example, if the power is turned off and on or the device is rebooted.
 
 ### External management
 Added control of the device via the web-panel in case the device will be operated without the Home Assistant.
 
 ## Fast Configure
-- Create a new project in ESPHome (click "+ NEW DEVICE" in the bottom right corner)
-- Drag-and-drop "doorbell.yaml" in the small setup-window
+- Create a new project in ESPHome (click `+ NEW DEVICE` in the bottom right corner)
+- Drag-and-drop `doorbell.yaml` in the small setup-window
 - Make changes to:
-  - "api" -> "encryption" -> "key"
-  - "ota" -> "password"
-  - "wifi" -> "ap" -> "password"
-  - "web_server" -> "auth" -> "username" and "password"
+  - `api` -> `encryption` -> `key`
+  - `ota` -> `password`
+  - `wifi` -> `ap` -> `password`
+  - `web_server` -> `auth` -> `username` and `password`
 - Compile and install in any convenient way
 - After device boot up, click on the physical call button and save its "Button ID" from the logs
 - Comment or delete line #130 in ESPHome "project code":
