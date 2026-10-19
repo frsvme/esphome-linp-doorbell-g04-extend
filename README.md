@@ -16,25 +16,26 @@
 - Added "Tune (Melody) value" slider in the Home Assistant
 - In Home Assistant added a button "Play Doorbell" that plays the sound as if you had pressed the call button
 
->To save the current settings to flash as default, you need to click on the "Doorbell Restart" button in Home Assistant.
+>To save the current settings to flash as default, you need to click on the "Doorbell Restart" button in Home Assistant or web-panel.
 
 P.S. The "Mute" switch is reset to Disabled by default. For example, if the power is turned off and on or the device is rebooted.
 
+### External management
+Added control of the device via the web-panel in case the device will be operated without the Home Assistant.
+
 ## Fast Configure
-- Create a new project in ESPHome (click "+ NEW DEVICE")
-- Put "doorbell-mi-extend" in name and click "NEXT"
-- Click "SKIP THIS STEP"
-- Choose "ESP32"
-- Save generated "Encryption Key" and click "SKIP"
-- Click "EDIT" on the new created project
-- Save generated value from "ota"->"password"
-- Copy the contents of the "doorbell.yaml" from this repository, replace the missing values with your own, which you saved in the previous steps
-- Make sure that you have setup "!secret" settings for wifi
+- Create a new project in ESPHome (click "+ NEW DEVICE" in the bottom right corner)
+- Drag-and-drop "doorbell.yaml" in the small setup-window
+- Make changes to:
+  - "api" -> "encryption" -> "key"
+  - "ota" -> "password"
+  - "wifi" -> "ap" -> "password"
+  - "web_server" -> "auth" -> "username" and "password"
 - Compile and install in any convenient way
 - After device boot up, click on the physical call button and save its "Button ID" from the logs
-- Comment or delete line #96 in ESPHome "project code":
+- Comment or delete line #130 in ESPHome "project code":
   >dump: linptech_g6l
-- Put your received "Button ID" in line #204 in ESPHome "project code":
+- Put your received "Button ID" in line #228 in ESPHome "project code":
   >address: 0xABCDEF
 - Compile and install wirelessly
 
