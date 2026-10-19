@@ -1,5 +1,5 @@
 esphome:
-  name: "doorbell-mi-extend"
+  name: doorbell-mi-extend
   friendly_name: "doorbell-mi-extend"
 
 esp32:
@@ -22,10 +22,10 @@ logger:
 api:
   encryption:
     key: "****************="
-  
+
   # Custom services to control the chime chip.
-  services:
-    - service: play_tune
+  actions:
+    - action: play_tune
       variables:
         tune: int
         volume: int
@@ -35,36 +35,51 @@ api:
             tune: !lambda 'return tune;'
             volume: !lambda 'return volume;'
             mode: !lambda 'return mode;'
-    - service: stop_playing
+
+    - action: stop_playing
       then:
         - remote_transmitter.transmit_szy8039b:
             command: STOP
-    - service: set_tune
+
+    - action: set_tune
       variables:
         tune: int
       then:
-        - lambda: |-
-            id(tune_value) = tune;
-            id(tune_slider).publish_state(tune);
-    - service: set_volume
+        - number.set:
+            id: tune_slider
+            value: !lambda 'return tune;'
+
+    - action: set_volume
       variables:
         volume: int
       then:
-        - lambda: |-
-            id(volume_value) = volume;
-            id(volume_slider).publish_state(volume);
-    - service: set_mode
+        - number.set:
+            id: volume_slider
+            value: !lambda 'return volume;'
+
+    - action: set_mode
       variables:
         mode: int
       then:
-        - lambda: |-
-            id(mute_switch).state = (mode == 3);
-    - service: set_mute
+        - if:
+            condition:
+              lambda: 'return mode == 3;'
+            then:
+              - switch.turn_on: mute_switch
+            else:
+              - switch.turn_off: mute_switch
+
+    - action: set_mute
       variables:
         mute: bool
       then:
-        - lambda: |-
-            id(mute_switch).state = mute;
+        - if:
+            condition:
+              lambda: 'return mute;'
+            then:
+              - switch.turn_on: mute_switch
+            else:
+              - switch.turn_off: mute_switch
 
 ota:
   - platform: esphome
@@ -81,13 +96,30 @@ wifi:
 
 captive_portal:
 
+# Built-in web interface with login/password.
+web_server:
+  port: 80
+  version: 3
+  auth:
+    type: digest
+    username: admin
+    password: admin
+  ota: false
+  sorting_groups:
+    - id: doorbell_control
+      name: "Doorbell control"
+      sorting_weight: 10
+    - id: doorbell_sensors
+      name: "Doorbell sensors (debug)"
+      sorting_weight: 20
+
 # Import the external component.
 external_components:
   - source:
       type: git
       url: https://github.com/frsvme/esphome-linp-doorbell-g04-extend
     components: [ linptech_g6l ]
-    
+
 # Add remote protocols for buttons and chime chip.
 linptech_g6l:
 
@@ -107,7 +139,7 @@ remote_transmitter:
   pin: GPIO15
   carrier_duty_percent: 100%
   non_blocking: true
-  
+
 # LED outputs.
 output:
   # You'll get a warning about GPIO4 being a strapping pin,
@@ -140,34 +172,17 @@ light:
               duration: 333ms
             - state: false
               duration: 333ms
-  
+    web_server:
+      sorting_group_id: doorbell_sensors
+      sorting_weight: 30
+
   - platform: binary
     name: Light Orange
     output: orange_led
     id: orange_light
-
-  #- platform: binary
-  #  name: orange light
-  #  output: orange_led
-  #  id: orange_light
-  #  effects:
-  #    - strobe:
-  #        name: blink
-  #        colors:
-  #          - state: true
-  #            duration: 333ms
-  #          - state: false
-  #            duration: 333ms
-
-globals:
-  - id: tune_value
-    type: int
-    restore_value: yes
-    initial_value: '1'
-  - id: volume_value
-    type: int
-    restore_value: yes
-    initial_value: '1'
+    web_server:
+      sorting_group_id: doorbell_sensors
+      sorting_weight: 40
 
 binary_sensor:
   # The physical buttons on the receiver can be used for whatever you like.
@@ -176,6 +191,9 @@ binary_sensor:
       number: GPIO36
       inverted: true
     name: "Button left"
+    web_server:
+      sorting_group_id: doorbell_sensors
+      sorting_weight: 10
     on_press:
       - light.toggle: blue_light
 
@@ -184,21 +202,24 @@ binary_sensor:
       number: GPIO39
       inverted: true
     name: "Button right"
+    web_server:
+      sorting_group_id: doorbell_sensors
+      sorting_weight: 20
     on_press:
       - if:
           condition:
-            lambda: 'return id(mute_switch).state == true;'
+            lambda: 'return id(mute_switch).state;'
           then:
             - switch.turn_off: mute_switch
             - remote_transmitter.transmit_szy8039b:
-                tune: !lambda 'return id(tune_value);'
-                volume: !lambda 'return id(volume_value);'
+                tune: !lambda 'return (int) id(tune_slider).state;'
+                volume: !lambda 'return (int) id(volume_slider).state;'
                 mode: 1
             - logger.log: "Mute OFF (button)"
           else:
             - switch.turn_on: mute_switch
             - logger.log: "Mute ON (button)"
-      
+
   # For each doorbell button you want to listen for, add a block like this:
   - platform: remote_receiver
     name: Doorbell A
@@ -209,6 +230,9 @@ binary_sensor:
       # The buttons' transmission is repeated; 0.2s is long enough to debounce.
       # A longer delay can be used to filter out actual repeat presses.
       delayed_off: 0.2s
+    web_server:
+      sorting_group_id: doorbell_sensors
+      sorting_weight: 50
     on_press:
       then:
         # If you want a hardcoded chime (which works without a HA connection),
@@ -218,8 +242,8 @@ binary_sensor:
         # - Mode is from 1-4; since the LEDs are connected only to the ESP32,
         #   modes 1/2/4 play music and mode 3 doesn't (which isn't much use).
         - remote_transmitter.transmit_szy8039b:
-            tune: !lambda 'return id(tune_value);'
-            volume: !lambda 'return id(volume_value);'
+            tune: !lambda 'return (int) id(tune_slider).state;'
+            volume: !lambda 'return (int) id(volume_slider).state;'
             mode: !lambda 'return id(mute_switch).state ? 3 : 1;'
         # Send an event to Home Assistant with custom parameters, if desired.
         - homeassistant.event:
@@ -234,7 +258,8 @@ binary_sensor:
         - delay: 5s
         - light.turn_off: blue_light
 
-# Additional buttons can be configured as desired. !!!Uncomment the block below to add the ID of the second button.!!!
+# Additional buttons can be configured as desired.
+# Uncomment the block below to add the ID of the second button.
 #  - platform: remote_receiver
 #    name: Doorbell B
 #    linptech_g6l:
@@ -244,8 +269,8 @@ binary_sensor:
 #    on_press:
 #      then:
 #        - remote_transmitter.transmit_szy8039b:
-#            tune: !lambda 'return id(tune_value);'
-#            volume: !lambda 'return id(volume_value);'
+#            tune: !lambda 'return (int) id(tune_slider).state;'
+#            volume: !lambda 'return (int) id(volume_slider).state;'
 #            mode: !lambda 'return id(mute_switch).state ? 3 : 1;'
 #        - homeassistant.event:
 #            event: esphome.button_pressed
@@ -265,13 +290,12 @@ number:
     min_value: 1
     max_value: 40
     step: 1
+    optimistic: true
     restore_value: true
     initial_value: 1
-    set_action:
-      - lambda: |-
-          id(tune_value) = (int)x;
-          id(tune_slider).publish_state((int)x);
-      - logger.log: "Tune set to x"
+    web_server:
+      sorting_group_id: doorbell_control
+      sorting_weight: 10
 
   - platform: template
     name: "Volume"
@@ -279,37 +303,45 @@ number:
     min_value: 1
     max_value: 8
     step: 1
+    optimistic: true
     restore_value: true
     initial_value: 1
-    set_action:
-      - lambda: |-
-          id(volume_value) = (int)x;
-          id(volume_slider).publish_state((int)x);
-      - logger.log: "Volume set to x"
+    web_server:
+      sorting_group_id: doorbell_control
+      sorting_weight: 20
 
 button:
   - platform: restart
-    name: "Doorbell Restart"
+    name: "Doorbell Restart (for save settings)"
+    web_server:
+      sorting_group_id: doorbell_control
+      sorting_weight: 50
 
   - platform: template
-    name: "Play Doorbell"
+    name: "Play Doorbell (test)"
     id: play_doorbell
     on_press:
       - remote_transmitter.transmit_szy8039b:
-          tune: !lambda 'return id(tune_value);'
-          volume: !lambda 'return id(volume_value);'
+          tune: !lambda 'return (int) id(tune_slider).state;'
+          volume: !lambda 'return (int) id(volume_slider).state;'
           mode: !lambda 'return id(mute_switch).state ? 3 : 1;'
       - logger.log: "Virtual doorbell pressed"
+    web_server:
+      sorting_group_id: doorbell_control
+      sorting_weight: 30
 
 switch:
   - platform: template
     name: "Mute"
     id: mute_switch
     optimistic: true
-    restore_mode: "ALWAYS_OFF"
+    restore_mode: ALWAYS_OFF
     turn_on_action:
       - light.turn_on: orange_light
       - logger.log: "Mute ON"
     turn_off_action:
       - light.turn_off: orange_light
       - logger.log: "Mute OFF"
+    web_server:
+      sorting_group_id: doorbell_control
+      sorting_weight: 40
