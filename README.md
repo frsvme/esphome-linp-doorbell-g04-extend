@@ -1,7 +1,7 @@
 # ESPHome custom component for Linptech G6L-WIFI (linp-doorbell-g04) Extended for Home Assistant
 
 ## Extended
-<img width="257" height="336" alt="image" src="https://github.com/user-attachments/assets/911492fe-5253-4416-9865-fa05a87d5b33" />
+<img width="325" height="406" alt="image" src="https://github.com/user-attachments/assets/37709440-26a6-4e21-b461-ffa29884fbb7" />
 
 ### Mute mode
 - The right button on the device switches the `Mute mode` by default
@@ -12,11 +12,13 @@
 >If you turn off the `Mute mode` from the Home Assistant, there will be no sound.  While the `Mute mode` is active, the orange backlight will be turned on.
 
 ### Settings
-- Added `Volume value` slider in the Home Assistant
-- Added `Tune (Melody) value` slider in the Home Assistant
-- In Home Assistant added a button `Play Doorbell` that plays the sound as if you had pressed the call button
+- Added `Volume value` slider (in the Home Assistant and Web-panel)
+- Added `Tune (Melody) value` slider (in the Home Assistant and Web-panel)
+- Added a button `Play Doorbell` that plays the sound as if you had pressed the call button (in the Home Assistant and Web-panel)
+- Added `Bind doorbell button` button that used to bind buttons to a call (in the Home Assistant and Web-panel)
+- Added `Unbind all doorbell buttons` button that used to reset the bounded buttons (in the Home Assistant and Web-panel)
 
->To save the current settings to flash as default, you need to click on the `Doorbell Restart` button in Home Assistant or web-panel.
+>To save the current settings to flash as default, you need to click on the `Doorbell Restart` button (in the Home Assistant and Web-panel).
 
 P.S. The `Mute` switch is reset to Disabled by default. For example, if the power is turned off and on or the device is rebooted.
 
@@ -32,12 +34,18 @@ Added control of the device via the web-panel in case the device will be operate
   - `wifi` -> `ap` -> `password`
   - `web_server` -> `auth` -> `username` and `password`
 - Compile and install in any convenient way
-- After device boot up, click on the physical call button and save its "Button ID" from the logs
-- Comment or delete line #130 in ESPHome "project code":
-  >dump: linptech_g6l
-- Put your received "Button ID" in line #228 in ESPHome "project code":
-  >address: 0xABCDEF
-- Compile and install wirelessly
+- After device boot up, click on the `Bind doorbell button` (in the Home Assistant or Web-panel) and click on physical call-button
+- The device is ready for use
+
+You can add additional buttons at any time (in this configuration, the maximum number buttons is 5 pieces) or unbind all linked buttons.
+
+Each new binding button takes the next free slot, for example:
+
+>You have first binded button - it will occupy slot A
+>
+>The next binding button will occupy slot B
+>
+>After successfully binding the second button, the next binding button will occupy the C slot etc...
 
 ## Background
 The Linptech G6L-WIFI is a wifi doorbell with a self-powered button.  It's part of the Mijia (Xiaomi smart home) ecosystem, but it unfortunately doesn't seem to announce events (such as the button being pressed) on the local network.  As such, this project aims to provide replacement firmware to enable full local control via [ESPHome](https://esphome.io/) - which provides for simple integration with [Home Assistant](https://www.home-assistant.io/).
