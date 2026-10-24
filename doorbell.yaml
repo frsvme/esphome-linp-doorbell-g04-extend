@@ -379,7 +379,7 @@ button:
       sorting_weight: 30
 
   - platform: template
-    name: "Add doorbell button"
+    name: "Bind doorbell button"
     id: add_doorbell_button
     on_press:
       then:
@@ -396,7 +396,7 @@ button:
       sorting_weight: 50
 
   - platform: template
-    name: "Clear all doorbell bindings"
+    name: "Unbind all doorbell buttons"
     id: clear_doorbell_bindings
     on_press:
       then:
