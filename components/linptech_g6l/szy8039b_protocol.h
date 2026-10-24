@@ -23,9 +23,10 @@ struct Szy8039bData {
 
 class Szy8039bProtocol : public RemoteProtocol<Szy8039bData> {
  public:
-  void encode(RemoteTransmitData *dst, const Szy8039bData &data) override;
-  optional<Szy8039bData> decode(RemoteReceiveData src) override;
-  void dump(const Szy8039bData &data) override;
+  void encode(RemoteTransmitData *dst, const Szy8039bData &data);
+  optional<Szy8039bData> decode(RemoteReceiveData src);
+  void dump(const Szy8039bData &data);
+
  protected:
   void encode_byte_(RemoteTransmitData *dst, uint8_t byte);
 };
