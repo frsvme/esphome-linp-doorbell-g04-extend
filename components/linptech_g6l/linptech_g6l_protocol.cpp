@@ -65,7 +65,7 @@ optional<LinptechG6lData> LinptechG6lProtocol::decode(RemoteReceiveData src) {
 }
 
 void LinptechG6lProtocol::dump(const LinptechG6lData &data) {
-  ESP_LOGD(TAG, "Received Linptech G6L: address=0x%06X", data.address);
+  ESP_LOGD(TAG, "Received Linptech G6L: address=0x%06" PRIx32, data.address);
 }
 
 }  // namespace remote_base
