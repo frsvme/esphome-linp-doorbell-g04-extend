@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include "linptech_g6l_protocol.h"
 #include "esphome/core/log.h"
 
